@@ -1,0 +1,52 @@
+#include <Servo.h>
+
+const int buttonPin1 = A2;   // Knop 1
+const int buttonPin2 = A1;   // Knop 2
+const int ledPin1 = 10;      // LED 1
+const int ledPin2 = 9;       // LED 2
+const int servoPin = 6;      // Servo motor pin
+
+Servo myServo;
+
+bool previousButton1 = HIGH;
+bool previousButton2 = HIGH;
+
+void setup() {
+  pinMode(buttonPin1, INPUT_PULLUP);
+  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+
+  myServo.attach(servoPin);
+  myServo.write(0); // Beginpositie
+}
+
+void loop() {
+  bool currentButton1 = digitalRead(buttonPin1);
+  bool currentButton2 = digitalRead(buttonPin2);
+
+  // Check op knop 1 druk
+  if (previousButton1 == HIGH && currentButton1 == LOW) {
+    digitalWrite(ledPin1, HIGH);
+    myServo.write(90);           // Beweeg servo
+    delay(500);                  // Wacht even
+    myServo.write(0);            // Terug naar begin
+    digitalWrite(ledPin1, LOW);  // LED weer uit
+  }
+
+  // Check op knop 2 druk
+  if (previousButton2 == HIGH && currentButton2 == LOW) {
+    digitalWrite(ledPin2, HIGH);
+    myServo.write(90);           // Beweeg servo
+    delay(500);                  // Wacht even
+    myServo.write(0);            // Terug naar begin
+    digitalWrite(ledPin2, LOW);  // LED weer uit
+  }
+
+  // Bewaar huidige staat voor volgende keer
+  previousButton1 = currentButton1;
+  previousButton2 = currentButton2;
+}
